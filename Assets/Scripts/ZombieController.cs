@@ -21,7 +21,11 @@ public class ZombieController : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("Hit " + other.gameObject);
+        if (other.CompareTag("cat"))  {
+            other.GetComponent<CatController>().JoinConga();
+        } else if (other.CompareTag("enemy")) {
+            Debug.Log("Pardon me, ma'am.");
+        }
     }
 
     // Use this for initialization
