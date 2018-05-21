@@ -24,8 +24,9 @@ public class CatController : MonoBehaviour {
         //3
         isZombie = true;
 
-        GetComponent<Collider2D>().enabled = false;
-        GetComponent<Animator>().SetBool("inConga", true);
+        Transform cat = transform.GetChild(0);
+        cat.GetComponent<Collider2D>().enabled = false;
+        cat.GetComponent<Animator>().SetBool("inConga", true);
 
         targetPosition = followTarget.position;
     }
@@ -37,7 +38,7 @@ public class CatController : MonoBehaviour {
         }
     }
 
-    void UpdateTargetPosition() {
+    public void UpdateTargetPosition() {
         targetPosition = followTarget.position;
     }
 
@@ -72,7 +73,7 @@ public class CatController : MonoBehaviour {
         Object.Destroy(gameObject);
     }
 
-    void OnBecameInvisible() {
+    public void OnBecameInvisible() {
         if (!isZombie) {
             GrantCatTheSweetReleaseOfDeath();
         }
