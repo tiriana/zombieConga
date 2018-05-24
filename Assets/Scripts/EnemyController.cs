@@ -12,6 +12,7 @@ public class EnemyController : MonoBehaviour {
     void Start () {
         this.GetComponent<Rigidbody2D>().velocity = new Vector2(speed, 0);
         spawnPoint = GameObject.Find("SpawnPoint").transform;
+        transform.position = spawnPoint.position;
     }
 	
 	// Update is called once per frame

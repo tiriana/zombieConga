@@ -6,6 +6,13 @@ public class ZombieController : MonoBehaviour {
 
 	public float moveSpeed;
 	public float turnSpeed;
+    public float winCond = 20;
+    private bool isInvincible = false;
+    private float timeSpentInvincible;
+    private int lives = 3;
+
+    public AudioClip enemyContactSound;
+    public AudioClip catContactSound;
 
     private List<Transform> congaLine = new List<Transform>();
 
@@ -28,8 +35,25 @@ public class ZombieController : MonoBehaviour {
             Transform followTarget = congaLine.Count == 0 ? transform : congaLine[congaLine.Count - 1];
             other.transform.parent.GetComponent<CatController>().JoinConga(followTarget, moveSpeed, turnSpeed );
             congaLine.Add(other.transform);
-        } else if (other.CompareTag("enemy")) {
-            Debug.Log("Pardon me, ma'am.");
+            GetComponent<AudioSource>().PlayOneShot(catContactSound);
+
+            if (congaLine.Count >= winCond) {
+                Application.LoadLevel("WinScene");
+            }
+
+        } else if (!isInvincible && other.CompareTag("enemy")) {
+            isInvincible = true;
+            timeSpentInvincible = 0;
+            GetComponent<AudioSource>().PlayOneShot(enemyContactSound);
+            for (int i = 0; i < 2 && congaLine.Count > 0; i++) {
+                int lastIdx = congaLine.Count - 1;
+                Transform cat = congaLine[lastIdx];
+                congaLine.RemoveAt(lastIdx);
+                cat.parent.GetComponent<CatController>().ExitConga();
+            }
+            if (--lives <= 0) {
+                Application.LoadLevel("LoseScene");
+            }
         }
     }
 
@@ -41,8 +65,27 @@ public class ZombieController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		// 1
-		Vector3 currentPosition = transform.position;
+        if (isInvincible)
+        {
+            //2
+            timeSpentInvincible += Time.deltaTime;
+
+            //3
+            if (timeSpentInvincible < 3f)
+            {
+                float remainder = timeSpentInvincible % .3f;
+                GetComponent<Renderer>().enabled = remainder > .15f;
+            }
+            //4
+            else
+            {
+                GetComponent<Renderer>().enabled = true;
+                isInvincible = false;
+            }
+        }
+
+        // 1
+        Vector3 currentPosition = transform.position;
 		// 2
 		if( Input.GetButton("Fire1") ) {
 			// 3

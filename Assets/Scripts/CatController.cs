@@ -69,7 +69,7 @@ public class CatController : MonoBehaviour {
         }
     }
 
-    void GrantCatTheSweetReleaseOfDeath() {
+    public void GrantCatTheSweetReleaseOfDeath() {
         Object.Destroy(gameObject);
     }
 
@@ -77,5 +77,15 @@ public class CatController : MonoBehaviour {
         if (!isZombie) {
             GrantCatTheSweetReleaseOfDeath();
         }
+    }
+
+    public void ExitConga() {
+        Vector3 cameraPos = Camera.main.transform.position;
+        targetPosition = new Vector3(cameraPos.x + Random.Range(-1.5f, 1.5f),
+                                     cameraPos.y + Random.Range(-1.5f, 1.5f),
+                                     followTarget.position.z);
+
+        Transform cat = transform.GetChild(0);
+        cat.GetComponent<Animator>().SetBool("inConga", false);
     }
 }
